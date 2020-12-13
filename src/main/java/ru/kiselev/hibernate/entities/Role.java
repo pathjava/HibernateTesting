@@ -13,15 +13,18 @@ import java.util.Set;
 public class Role {
 
     @Id
+    @SequenceGenerator(name = "ROLESEQ", sequenceName = "roleseq", allocationSize = 5)
+    @GeneratedValue(generator = "ROLESEQ", strategy = GenerationType.SEQUENCE)
+    @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
     @Column(name = "role")
     private String nameRole;
 
-    @ManyToMany
-    @JoinTable(name = "persons_roles",
-            joinColumns = @JoinColumn(name = "roles_id"),
-            inverseJoinColumns = @JoinColumn(name = "person_id"))
+    @ManyToMany(mappedBy = "roles")
+//    @JoinTable(name = "persons_roles",
+//            joinColumns = @JoinColumn(name = "roles_id"),
+//            inverseJoinColumns = @JoinColumn(name = "person_id"))
     private Set<Person> persons = new HashSet<>();
 
     public Role() {

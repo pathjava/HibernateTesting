@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class Person {
 
     @Id
-    @SequenceGenerator(name = "PERSONSEQ", sequenceName = "personseq", allocationSize = 5, initialValue = 1)
+    @SequenceGenerator(name = "PERSONSEQ", sequenceName = "personseq", allocationSize = 5)
     @GeneratedValue(generator = "PERSONSEQ", strategy = GenerationType.SEQUENCE)
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
@@ -24,6 +24,7 @@ public class Person {
     @Column(name = "last_name", nullable = false, length = 50)
     private String lastName;
 
+    @Column(name = "age")
     private int age;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -34,8 +35,7 @@ public class Person {
     @JoinColumn(name = "country_id")
     private Country country;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "person",
-            fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Car> cars = new ArrayList<>();
 
     @ManyToMany
@@ -50,18 +50,22 @@ public class Person {
     @Column(name = "zdt")
     private ZonedDateTime testTime;
 
+    @Version
+    @Column(name = "version")
+    private Integer version;
+
     public Person() {
     }
 
-    public Person(String firstName, String lastName, int age, Passport passport, Country country, List<Car> cars, Date dateOfBirth, ZonedDateTime testTime) {
+    public Person(Long id, String firstName, String lastName, int age,
+                  Date dateOfBirth, ZonedDateTime testTime, Integer version) {
+        this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
-        this.passport = passport;
-        this.country = country;
-        this.cars = cars;
         this.dateOfBirth = dateOfBirth;
         this.testTime = testTime;
+        this.version = version;
     }
 
     public Long getId() {
@@ -144,6 +148,14 @@ public class Person {
         this.roles = roles;
     }
 
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -159,15 +171,17 @@ public class Person {
 
     @Override
     public String toString() {
-        String allCars = null;
+        String allCars;
         if (cars != null && !cars.isEmpty()){
-            allCars = cars.stream().map(car -> car + " ").collect(Collectors.joining());
-        }
-        String allRoles = null;
+            allCars = cars.stream().map(car -> car + ",").collect(Collectors.joining());
+        } else
+            allCars = "null,";
+        String allRoles;
         if (roles != null && !roles.isEmpty()){
-            allRoles = roles.stream().map(role -> role + " ").collect(Collectors.joining());
-        }
-        return "Person " + id + ", " + firstName + " " + lastName + ", " + age + ", Roles: " + allRoles + ", Passport: "
-                + passport + ", Country: " + country + ", Cars: " + allCars + ", " + dateOfBirth + ", " + testTime;
+            allRoles = roles.stream().map(role -> role + ",").collect(Collectors.joining());
+        } else
+            allRoles = "null,";
+        return "Person " + id + ", " + firstName + " " + lastName + ", " + age + ", Roles: " + allRoles + " Passport: "
+                + passport + ", Country: " + country + ", Cars: " + allCars + " " + dateOfBirth + ", " + testTime;
     }
 }

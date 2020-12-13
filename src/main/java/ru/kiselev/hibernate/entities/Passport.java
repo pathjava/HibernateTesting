@@ -11,7 +11,7 @@ import java.util.Objects;
 public class Passport {
 
     @Id
-    @SequenceGenerator(name = "ADDRESSSEQ", sequenceName = "addressseq", allocationSize = 5, initialValue = 1)
+    @SequenceGenerator(name = "ADDRESSSEQ", sequenceName = "addressseq", allocationSize = 5)
     @GeneratedValue(generator = "ADDRESSSEQ", strategy = GenerationType.SEQUENCE)
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;

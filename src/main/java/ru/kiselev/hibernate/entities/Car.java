@@ -11,21 +11,23 @@ import java.util.Objects;
 public class Car {
 
     @Id
-    @SequenceGenerator(name = "CARSEQ", sequenceName = "carseq", allocationSize = 5, initialValue = 1)
+    @SequenceGenerator(name = "CARSEQ", sequenceName = "carseq", allocationSize = 5)
     @GeneratedValue(generator = "CARSEQ", strategy = GenerationType.SEQUENCE)
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
 
+    @Column(name = "model", nullable = false)
     private String model;
 
-    @ManyToOne/*(fetch = FetchType.LAZY)*/
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "person_id")
     private Person person;
 
     public Car() {
     }
 
-    public Car(String model, Person person) {
+    public Car(Long id, String model, Person person) {
+        this.id = id;
         this.model = model;
         this.person = person;
     }
@@ -59,12 +61,12 @@ public class Car {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Car car = (Car) o;
-        return Objects.equals(id, car.id);
+        return Objects.equals(id, car.id) && Objects.equals(model, car.model);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id);
+        return Objects.hash(id, model);
     }
 
     @Override

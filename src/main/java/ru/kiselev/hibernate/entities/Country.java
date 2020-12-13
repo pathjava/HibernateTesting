@@ -1,6 +1,7 @@
 package ru.kiselev.hibernate.entities;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
@@ -12,7 +13,7 @@ import java.util.Set;
 public class Country {
 
     @Id
-    @SequenceGenerator(name = "COUNTRYSEQ", sequenceName = "countryseq", allocationSize = 5, initialValue = 1)
+    @SequenceGenerator(name = "COUNTRYSEQ", sequenceName = "countryseq", allocationSize = 5)
     @GeneratedValue(generator = "COUNTRYSEQ", strategy = GenerationType.SEQUENCE)
     @Column(name = "id", updatable = false, nullable = false)
     private Long id;
@@ -21,7 +22,7 @@ public class Country {
     private String countryName;
 
     @OneToMany(mappedBy = "country"/*, fetch = FetchType.EAGER*/)
-    private Set<Person> citizens;
+    private Set<Person> citizens = new HashSet<>();
 
     public Country() {
     }

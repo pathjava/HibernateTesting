@@ -2,14 +2,15 @@ package ru.kiselev.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.Transaction;
-import ru.kiselev.hibernate.entities.Car;
+import org.hibernate.query.Query;
 import ru.kiselev.hibernate.entities.Country;
 import ru.kiselev.hibernate.entities.Passport;
 import ru.kiselev.hibernate.entities.Person;
 
-import java.time.ZoneId;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
 
 import static ru.kiselev.hibernate.utils.HibernateSessionFactory.getSession;
@@ -28,9 +29,35 @@ public class Main {
         }
     }
 
+    public static void getOneQuery() {
+        try (Session session = getSession()) {
+            Query<?> query = session.createQuery("FROM Person WHERE firstName = :param");
+            query.setParameter("param", "Alexey");
+            Person person = (Person) query.getSingleResult();
+            System.out.println(person);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public static void getList() {
         try (Session session = getSession()) {
             List<Person> list = session.createQuery("FROM Person p ORDER BY p.firstName, p.lastName").getResultList();
+            list.forEach(System.out::println);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public static void getListCriteria() {
+        try (Session session = getSession()) {
+            CriteriaBuilder cb = session.getCriteriaBuilder();
+            CriteriaQuery<Person> cq = cb.createQuery(Person.class);
+            Root<Person> root = cq.from(Person.class);
+            cq.select(root);
+            cq.orderBy(cb.asc(root.get("firstName")));
+            Query<Person> query = session.createQuery(cq)/*.setMaxResults(3)*/;
+            List<Person> list = query.getResultList();
             list.forEach(System.out::println);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -73,16 +100,17 @@ public class Main {
 
     public static void saveOne() {
         try (Session session = getSession()) {
-            Transaction transaction = session.getTransaction();
-            transaction.begin();
+//            Transaction transaction = session.getTransaction();
+//            transaction.begin();
+            session.beginTransaction();
 
             Person savePerson = new Person();
-            savePerson.setId(100L);
-            savePerson.setFirstName("Mikhail");
-            savePerson.setLastName("Sidorov");
+            savePerson.setFirstName("Vasiliy");
+            savePerson.setLastName("Vasiliev");
             session.save(savePerson);
 
-            transaction.commit();
+//            transaction.commit();
+            session.getTransaction().commit();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -143,7 +171,7 @@ public class Main {
             Transaction transaction = session.getTransaction();
             transaction.begin();
 
-            Person refreshPerson = session.get(Person.class,52L);
+            Person refreshPerson = session.get(Person.class, 52L);
             System.out.println(refreshPerson);
             refreshPerson.setFirstName("Igorrr");
             session.update(refreshPerson);
@@ -177,6 +205,10 @@ public class Main {
     public static void main(String[] args) {
 
         getList();
+
+//        getListCriteria();
+
+//        getOneQuery();
 
 //        getListSecond();
 
