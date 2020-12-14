@@ -29,6 +29,17 @@ public class Main {
         }
     }
 
+    public static void testVersion() {
+        try (Session session = getSession()) {
+            Person person = session.get(Person.class, 32L);
+            session.beginTransaction();
+            person.setAge(32);
+            session.getTransaction().commit();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     public static void getOneQuery() {
         try (Session session = getSession()) {
             Query<?> query = session.createQuery("FROM Person WHERE firstName = :param");
@@ -105,8 +116,9 @@ public class Main {
             session.beginTransaction();
 
             Person savePerson = new Person();
-            savePerson.setFirstName("Vasiliy");
-            savePerson.setLastName("Vasiliev");
+            savePerson.setFirstName("Denis");
+            savePerson.setLastName("Denisov");
+            savePerson.setVersion(1);
             session.save(savePerson);
 
 //            transaction.commit();
@@ -204,7 +216,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        getList();
+//        getList();
 
 //        getListCriteria();
 
@@ -213,6 +225,10 @@ public class Main {
 //        getListSecond();
 
 //        getOne();
+
+//        saveOne();
+
+        testVersion();
 
 //        refreshOne();
 

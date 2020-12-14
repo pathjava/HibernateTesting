@@ -28,7 +28,7 @@ public class Person {
     private int age;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "passport_id")
+    @JoinColumn(name = "passport_id", referencedColumnName = "id")
     private Passport passport;
 
     @ManyToOne(cascade = CascadeType.ALL)

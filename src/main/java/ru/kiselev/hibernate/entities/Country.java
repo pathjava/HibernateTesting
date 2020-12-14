@@ -21,7 +21,7 @@ public class Country {
     @Column(name = "name")
     private String countryName;
 
-    @OneToMany(mappedBy = "country"/*, fetch = FetchType.EAGER*/)
+    @OneToMany(mappedBy = "country")
     private Set<Person> citizens = new HashSet<>();
 
     public Country() {

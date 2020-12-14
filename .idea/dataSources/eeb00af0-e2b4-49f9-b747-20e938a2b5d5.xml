@@ -794,7 +794,7 @@ false Zulu
     <database id="3" parent="1" name="hibernate_test">
       <ObjectId>17242</ObjectId>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>1361</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1363</IntrospectionStateNumber>
       <Current>1</Current>
     </database>
     <database id="4" parent="1" name="postgres">
@@ -885,7 +885,7 @@ UC/10
       <ObjectId>17243</ObjectId>
       <StateNumber>584</StateNumber>
       <Owner>postgres</Owner>
-      <IntrospectionStateNumber>1362</IntrospectionStateNumber>
+      <IntrospectionStateNumber>1364</IntrospectionStateNumber>
     </schema>
     <extension id="21" parent="3" name="plpgsql">
       <ObjectId>13428</ObjectId>
